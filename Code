@@ -1,0 +1,71 @@
+#include <kipr/wombat.h>
+int Rmotor=0;
+int Lmotor=1;
+    // declare motors with variables 
+int hf=50;
+int hb=-50;
+int ff = 55;
+int fb = -50;
+int straightt = 150;
+int count = 0;
+    //declare functions
+void forward();
+void turn();
+void wallturn();
+
+int main()
+{
+	while(1==1) 
+    {
+        forward();
+    if(analog(0)>2880 && count==1) //if the front sensor says the wall has been detected for a second time then it will shut off the motors and end the loop
+    {
+        ao();
+        break;
+    }
+    if(analog(0)>2880) //if the front sensor says the wall has been detected then execute the turn
+    {
+		turn();
+    }
+        if(analog(1)>1800 && analog(1)<2850) // if the side sensor says the wall has been deteced then take a small evasive turn away
+        {
+		wallturn();
+        }
+        
+    }
+    return 0;
+}
+void forward()
+{    
+
+    motor(Rmotor,57.5);  
+    motor(Lmotor,ff);
+    msleep(straightt);
+    ao();
+}
+void turn()
+{
+    left();
+    motor(Rmotor,57.5);  
+    motor(Lmotor,ff);
+    msleep(400);
+    left();
+    motor(Rmotor,57.5);  
+    motor(Lmotor,ff);
+    msleep(400);
+    left();
+    motor(Rmotor,57.5);  
+    motor(Lmotor,ff);
+    msleep(450);
+    motor(Rmotor,hf);  
+    motor(Lmotor,hb);
+    msleep(200);
+    count=count+1;
+}
+void wallturn()
+{
+    motor(Rmotor,hf);  
+    motor(Lmotor,0);
+    msleep(100);
+    forward();
+}
